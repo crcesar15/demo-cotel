@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTabsTable extends Migration
+class CreateDeviceTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateTabsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tabs', function (Blueprint $table) {
+        Schema::create('device_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->double('lat',8,6);
-            $table->double('lng',8,6);
-            $table->integer('connections');
-            $table->integer('busy');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateTabsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tabs');
+        Schema::dropIfExists('device_types');
     }
 }

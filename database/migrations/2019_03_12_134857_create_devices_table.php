@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTerminalsTable extends Migration
+class CreateDevicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateTerminalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('terminals', function (Blueprint $table) {
+        Schema::create('devices', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->double('lat',8,6);
             $table->double('lng',8,6);
             $table->integer('connections');
             $table->integer('busy');
+            $table->unsignedInteger('device_type_id');
+            $table->foreign('device_type_id')->references('id')->on('device_types');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ class CreateTerminalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('terminals');
+        Schema::dropIfExists('devices');
     }
 }

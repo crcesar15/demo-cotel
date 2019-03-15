@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-03-10 21:14:34.
+    * Generated on 2019-03-15 14:42:56.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -116,7 +116,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
@@ -257,7 +257,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
@@ -398,7 +398,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
@@ -539,7 +539,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
@@ -680,7 +680,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
@@ -821,7 +821,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
@@ -962,7 +962,7 @@ namespace PHPSTORM_META {
         'composer' => \Illuminate\Support\Composer::class,
         'cookie' => \Illuminate\Cookie\CookieJar::class,
         'db' => \Illuminate\Database\DatabaseManager::class,
-        'db.connection' => \Illuminate\Database\MySqlConnection::class,
+        'db.connection' => \Illuminate\Database\PostgresConnection::class,
         'db.factory' => \Illuminate\Database\Connectors\ConnectionFactory::class,
         'encrypter' => \Illuminate\Encryption\Encrypter::class,
         'events' => \Illuminate\Events\Dispatcher::class,
