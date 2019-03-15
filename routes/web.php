@@ -13,6 +13,12 @@
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
+
+
+Route::get('/map',function (){
+    return view('map');
+})->name('map');
 
 Route::get('/devices','devicesController@getDevices')->name('devices');
+Route::get('/devices_by_type/{device_type_id}','devicesController@getDevicesByType')->name('devices_by_type');

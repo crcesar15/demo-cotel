@@ -1,5 +1,5 @@
 <header class="topbar" data-navbarbg="skin5">
-    <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+    <nav class="navbar top-navbar navbar-expand-md navbar-dark fixed-top">
         <div class="navbar-header" data-logobg="skin5">
             <!-- This is for the sidebar toggle which is visible on mobile only -->
             <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
@@ -120,7 +120,7 @@
                         <div class="p-l-30 p-10"><a href="javascript:void(0)" class="btn btn-sm btn-success btn-rounded">View Profile</a></div>
                     </div>
                 </li>-->
-                <h5 class="text-white">DEMO - COTEL</h5>
+                <h5 class="text-white">DEMO Cotel - Bayoex S.R.L.</h5>
             </ul>
         </div>
     </nav>
