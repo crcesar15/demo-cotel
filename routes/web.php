@@ -22,3 +22,9 @@ Route::get('/map',function (){
 
 Route::get('/devices','devicesController@getDevices')->name('devices');
 Route::get('/devices_by_type/{device_type_id}','devicesController@getDevicesByType')->name('devices_by_type');
+
+Route::get('/search', function () {
+    return view('search');
+})->name('search');
+
+Route::post('/get_devices_near', 'devicesController@getDevicesNear')->name('get_devices_near');

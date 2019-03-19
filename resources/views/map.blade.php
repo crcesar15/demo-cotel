@@ -58,13 +58,13 @@
         let tabMarkers = [];
         let terminalMarkers = [];
 
-        $(document).ready(function () {
+        $(document).ready(() => {
             let height = ($( document ).height() - 50);
             $('#map').css('height',height);
             enable_map(true);
         });
 
-        $('input#terminal').click(async function () {
+        $('input#terminal').click(async function() {
             let terminal;
             let id;
             let terminales;
@@ -96,14 +96,14 @@
             }
         });
 
-        $('input#tab').click(async function () {
+        $('input#tab').click(async function(){
             let tab;
             let id;
             let tabs;
             let position;
             let marker;
-
             tab = $(this).prop('checked');
+            console.log($(this));
             if (tab){
                 if (tabMarkers.length){
                     for (let i = 0; i < tabMarkers.length ; i++){
@@ -128,24 +128,24 @@
             }
         });
 
-        let get_devices = function(){
-            return new Promise(function(response, reject){
+        const get_devices = () => {
+            return new Promise((response, reject) => {
                 $.ajax({
                     url: '{{route('devices')}}',
                     type: 'GET',
                     dataType: 'JSON',
                 })
-                .done(function(msg) {
-                    response(msg);
+                .done((data) => {
+                    response(data);
                 })
-                .fail(function() {
+                .fail(() => {
                     reject(0);
                 });
             });
         };
 
-        let get_devices_by_type = async function (id) {
-            return new Promise(function(response, reject){
+        const get_devices_by_type = (id) => {
+            return new Promise((response, reject) => {
                 let url = '{{url('devices_by_type')}}';
                 url = url + '/' +id;
                 $.ajax({
@@ -153,16 +153,16 @@
                     type: 'GET',
                     dataType: 'JSON',
                 })
-                .done(function(msg) {
-                    response(msg);
+                .done((data) => {
+                    response(data);
                 })
-                .fail(function() {
+                .fail(() => {
                     reject(0);
                 });
             });
         };
 
-        let addCustomMarker = function(location, map, device, connections, busy) {
+        const addCustomMarker = (location, map, device, connections, busy) => {
             let contentString = '';
             let device_type = [];
 
@@ -188,18 +188,18 @@
                 map: map
             });
 
-            marker.addListener('click', function() {
+            marker.addListener('click', () => {
                 contentString =
-                    '<div id="content">'+
-                    '<div id="siteNotice">'+
-                    '</div>'+
-                    '<h4 id="firstHeading" class="firstHeading">Disponibilidad</h4>'+
-                    '<div id="bodyContent">'+
-                    '<p<b>Conexiones: </b>'+connections+'</p>'+
-                    '<p<b>Ocupadas: </b>'+busy+'</p>'+
-                    '<p<b>Libres: </b>'+(connections-busy)+'</p>'+
-                    '</div>'+
-                    '</div>';
+                    `<div id="content">
+                    <div id="siteNotice">
+                    </div>
+                    <h4 id="firstHeading" class="firstHeading">Disponibilidad</h4>
+                    <div id="bodyContent">
+                        <p><b>Conexiones: </b>${connections}<br>
+                        <b>Ocupadas: </b>${busy}<br>
+                        <b>Libres: </b>${connections-busy}</p>
+                    </div>
+                    </div>`;
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
             });

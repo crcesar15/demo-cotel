@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
         factory(\App\DeviceType::class, 1)->create([
             'name' => 'Tab'
         ]);
-        factory(\App\Device::class,30)->create();
+        factory(\App\Device::class,20)->create();
     }
 }
