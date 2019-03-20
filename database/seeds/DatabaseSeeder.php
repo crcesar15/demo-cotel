@@ -11,12 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\DeviceType::class, 1)->create([
+        factory(\App\DeviceType::class, App\DeviceType::TERMINAL)->create([
             'name' => 'Terminal'
         ]);
-        factory(\App\DeviceType::class, 1)->create([
+        factory(\App\DeviceType::class, App\DeviceType::TAB)->create([
             'name' => 'Tab'
         ]);
-        factory(\App\Device::class,20)->create();
+        factory(\App\Device::class,50)->create();
     }
 }

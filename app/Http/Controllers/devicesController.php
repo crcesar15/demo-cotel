@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Device;
+use App\DeviceType;
 use Illuminate\Http\Request;
 
 class devicesController extends Controller
@@ -24,10 +25,18 @@ class devicesController extends Controller
         $lng_min = $request->input('lng') - ($distance/111110);
         $lng_max = $request->input('lng') + ($distance/111110);
 
-        $data = Device::with('DeviceType')
-            ->where('lat','>', $lat_min)
+        $data = Device::with('device_type')
+            ->whereBetween('lat',[$lat_min,$lat_max])
+            ->whereBetween('lng',[$lng_min,$lng_max])
+            ->orWhere(function ($q) use ($request){
+                $q->when($request->input('terminal') == true, function ($q){
+                    return $q->where('device_type_id',DeviceType::TERMINAL);
+                });
+                $q->when($request->input('tab') == true, function ($q){
+                     return $q->where('device_type_id',DeviceType::TAB);
+                });
+            })
             ->get();
-            //->get();
 
         return response()->json($data);
     }

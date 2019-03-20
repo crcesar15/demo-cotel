@@ -27,7 +27,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header bg-primary">
-                            <h5 class="card-title text-center text-white"><i class="fa fa-search"></i> Busqueda</h5>
+                            <h5 class="card-title text-center text-white"><i class="fa fa-search"></i> Búsqueda</h5>
                         </div>
                         <div class="card-body">
                             <h6 class="card-title">Selecciones los parametros de busqueda </h6>
@@ -93,9 +93,6 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYfXp15LPz_VuK75gqcgNicuwK1H-1BOw&libraries=places"></script>
     <script src="{{asset('js/maps.js')}}"></script>
     <script>
-        let tabMarkers = [];
-        let terminalMarkers = [];
-
         $(document).ready(() => {
             let height = ($( document ).height() - 50);
             $('#map').css('height',height);
@@ -110,15 +107,28 @@
             }
         });
 
+        $('input#from_places').change(() => {
+            if (searchMarkers.length){
+                for(let i = 0; i < searchMarkers.length; i++){
+                    console.log('entro');
+                    searchMarkers[i].setMap(null);
+                }
+                searchMarkers = [];
+            }
+        });
+
         $('form#search').submit(async (event) => {
             event.preventDefault();
 
             let data;
+            let marker;
+            let line;
+            let points;
             let check_flag = false;
 
             data =  $('input[type = checkbox]');
 
-            for (i = 0; i < data.length ; i++){
+            for (let i = 0; i < data.length ; i++){
                 if (data[i].checked){
                     check_flag = true;
                 }
@@ -134,7 +144,30 @@
 
             if(selected_position && check_flag){
                 let data_to_markers = await get_devices_near();
-                console.log(data_to_markers);
+                if (data_to_markers.length){
+                    delete_search_lines()
+                    delete_search_markers();
+                    for (let i = 0; i < data_to_markers.length; i++){
+                        marker = addCustomMarker(
+                            {
+                                lat:parseFloat(data_to_markers[i].lat),
+                                lng:parseFloat(data_to_markers[i].lng)
+                            },
+                            map,
+                            data_to_markers[i].device_type.name,
+                            data_to_markers[i].connections,
+                            data_to_markers[i].busy
+                        );
+                        points = [selected_position, {lat:parseFloat(data_to_markers[i].lat),lng:parseFloat(data_to_markers[i].lng)}];
+                        line = addLine(points, map,'red');
+                        get_data_two_points(points);
+                        searchLines.push(line);
+                        searchMarkers.push(marker);
+                    }
+                }else{
+                    delete_search_markers();
+                    toastr.info('No se encontraron coincidencias', 'La búsqueda bajo los parámetros establecidos no generó ninguna coincidencia, intente nuevamente');
+                }
             }
         });
 
@@ -159,7 +192,7 @@
                     response(data);
                 })
                 .fail(() => {
-                    reject(0);
+                    reject([]);
                 });
             });
         };
@@ -179,6 +212,8 @@
             from_places.setOptions({strictBounds: true});
 
             google.maps.event.addListener(from_places, 'place_changed',function(){
+                delete_search_markers();
+                delete_search_lines()
                 let from_place = from_places.getPlace();
                 let from_address = from_place.formatted_address;
                 selected_position = {

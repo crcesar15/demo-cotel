@@ -12,8 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DeviceType query()
  * @mixin \Eloquent
  */
+
 class DeviceType extends Model
 {
+    CONST TERMINAL = 1;
+    CONST TAB = 2;
+
     public function devices(){
         return $this->hasMany(Device::class);
     }
