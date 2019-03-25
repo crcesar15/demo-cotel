@@ -37,7 +37,7 @@ let enable_map = (flag) => {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: pos,
                 zoom: 15,
-                streetViewControl: false,
+                streetViewControl: true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 styles: myStyles
             });
@@ -157,7 +157,7 @@ const get_data_two_points = (points) => {
     let y1  = parseFloat(points[0].lng);
     let y2  = parseFloat(points[1].lng);
 
-    let distance = Math.sqrt(Math.pow((x1-x2),2) + Math.pow((x1-x2),2));
+    let distance = Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
     distance = distance * 111110;
 
     let middle_point = {lat: ((x1+x2)/2), lng: ((y1+y2)/2)};

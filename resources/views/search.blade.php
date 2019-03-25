@@ -145,7 +145,7 @@
             if(selected_position && check_flag){
                 let data_to_markers = await get_devices_near();
                 if (data_to_markers.length){
-                    delete_search_lines()
+                    delete_search_lines();
                     delete_search_markers();
                     for (let i = 0; i < data_to_markers.length; i++){
                         marker = addCustomMarker(
@@ -159,12 +159,13 @@
                             data_to_markers[i].busy
                         );
                         points = [selected_position, {lat:parseFloat(data_to_markers[i].lat),lng:parseFloat(data_to_markers[i].lng)}];
-                        line = addLine(points, map,'red');
+                        line = addLine(points, map,'#514d8e');
                         get_data_two_points(points);
                         searchLines.push(line);
                         searchMarkers.push(marker);
                     }
                 }else{
+                    delete_search_lines();
                     delete_search_markers();
                     toastr.info('No se encontraron coincidencias', 'La búsqueda bajo los parámetros establecidos no generó ninguna coincidencia, intente nuevamente');
                 }
@@ -179,8 +180,8 @@
                     lat: selected_position.lat,
                     lng: selected_position.lng,
                     radio: $('select#radio').val(),
-                    terminal: $('input#terminal').is(':checked'),
-                    tab: $('input#tab').is(':checked')
+                    terminal: ($('input#terminal').is(':checked')?1:0),
+                    tab: ($('input#tab').is(':checked')?1:0)
                 };
                 $.ajax({
                     url: url,
@@ -254,8 +255,10 @@
 
             if (connections){
                 let infowindow = new google.maps.InfoWindow();
-
+                let streetViewInfoWindow = new google.maps.InfoWindow();
                 marker.addListener('click', () => {
+                    let streetViewPanorama = map.getStreetView();
+                    console.log(streetViewPanorama.getVisible());
                     contentString =
                         `<div id="content">
                     <div id="siteNotice">
@@ -267,8 +270,13 @@
                         <b>Libres: </b>${connections-busy}</p>
                     </div>
                     </div>`;
-                    infowindow.setContent(contentString);
-                    infowindow.open(map, marker);
+                    if(streetViewPanorama.getVisible() == true) {
+                        streetViewInfoWindow.setContent(contentString);
+                        streetViewInfoWindow.open(streetViewPanorama);
+                    }else{
+                        infowindow.setContent(contentString);
+                        infowindow.open(map, marker);
+                    }
                 });
             }else{
                 if (ant_marker != null) {

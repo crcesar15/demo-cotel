@@ -24,16 +24,15 @@ class devicesController extends Controller
         $lat_max = $request->input('lat') + ($distance/111110);
         $lng_min = $request->input('lng') - ($distance/111110);
         $lng_max = $request->input('lng') + ($distance/111110);
-
         $data = Device::with('device_type')
             ->whereBetween('lat',[$lat_min,$lat_max])
             ->whereBetween('lng',[$lng_min,$lng_max])
-            ->orWhere(function ($q) use ($request){
-                $q->when($request->input('terminal') == true, function ($q){
-                    return $q->where('device_type_id',DeviceType::TERMINAL);
+            ->where(function($q) use ($request){
+                $q->when($request->input('terminal') == 1, function ($q){
+                    return $q->orWhere('device_type_id',DeviceType::TERMINAL);
                 });
-                $q->when($request->input('tab') == true, function ($q){
-                     return $q->where('device_type_id',DeviceType::TAB);
+                $q->when($request->input('tab') == 1, function ($q){
+                    return $q->orWhere('device_type_id',DeviceType::TAB);
                 });
             })
             ->get();
