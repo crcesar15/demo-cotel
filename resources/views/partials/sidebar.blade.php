@@ -7,7 +7,6 @@
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('home')}}" aria-expanded="false"><i class="mdi mdi-home"></i><span class="hide-menu">Inicio</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('map')}}" aria-expanded="false"><i class="mdi mdi-map"></i><span class="hide-menu">Mapa</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('search')}}" aria-expanded="false"><i class="mdi mdi-magnify"></i><span class="hide-menu">Busqueda</span></a></li>
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-map-marker-radius"></i><span class="hide-menu">Distancias</span></a></li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

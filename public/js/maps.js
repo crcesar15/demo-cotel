@@ -11,6 +11,8 @@ let searchMarkers = [];
 let ant_marker = null;
 let searchLines = [];
 let markerLines = [];
+let panorama;
+let current_marker;
 
 let myStyles = [
     {
@@ -41,6 +43,11 @@ let enable_map = (flag) => {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 styles: myStyles
             });
+            panorama = map.getStreetView();
+            panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+                heading: 265,
+                pitch: 0
+            }));
             //addMarker(pos,map);
             act_position = pos;
             if (flag) {
@@ -48,6 +55,18 @@ let enable_map = (flag) => {
                     addMarker(event.latLng, map);
                 });
             }
+
+            google.maps.event.addListener(panorama, 'visible_changed', function() {
+                if (panorama.getVisible()) {
+                    let label = current_marker.getLabel();
+                    label.color = "white";
+                    current_marker.setLabel(label);
+                } else {
+                    let label = current_marker.getLabel();
+                    label.color = "#141344";
+                    current_marker.setLabel(label);
+                }
+            });
         }, () => {
             alert("error");
         });
@@ -163,4 +182,14 @@ const get_data_two_points = (points) => {
     let middle_point = {lat: ((x1+x2)/2), lng: ((y1+y2)/2)};
 
     return {distance: distance, middle: middle_point}
+};
+
+const open_panorama = (marker) => {
+    let toggle = panorama.getVisible();
+    if (!toggle) {
+        panorama.setPosition(marker.position);
+        panorama.setVisible(true);
+    } else {
+        panorama.setVisible(false);
+    }
 };

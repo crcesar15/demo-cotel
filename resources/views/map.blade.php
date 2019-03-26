@@ -38,8 +38,8 @@
                                     <label class="custom-control-label pl-4 pt-1" for="terminal">Terminales</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-sm-2">
-                                    <input type="checkbox" class="custom-control-input" value="2" id="tab">
-                                    <label class="custom-control-label pl-4 pt-1" for="tab">Tabs</label>
+                                    <input type="checkbox" class="custom-control-input" value="2" id="tap">
+                                    <label class="custom-control-label pl-4 pt-1" for="tap">Taps</label>
                                 </div>
                             </div>
                         </div>
@@ -55,13 +55,13 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYfXp15LPz_VuK75gqcgNicuwK1H-1BOw"></script>
     <script src="{{asset('js/maps.js')}}"></script>
     <script>
-        let tabMarkers = [];
+        let tapMarkers = [];
         let terminalMarkers = [];
 
         $(document).ready(() => {
             let height = ($( document ).height() - 50);
             $('#map').css('height',height);
-            enable_map(true);
+            enable_map(false);
         });
 
         $('input#terminal').click(async function() {
@@ -96,53 +96,37 @@
             }
         });
 
-        $('input#tab').click(async function(){
-            let tab;
+        $('input#tap').click(async function(){
+            let tap;
             let id;
-            let tabs;
+            let taps;
             let position;
             let marker;
-            tab = $(this).prop('checked');
+            tap = $(this).prop('checked');
             console.log($(this));
-            if (tab){
-                if (tabMarkers.length){
-                    for (let i = 0; i < tabMarkers.length ; i++){
-                        tabMarkers[i].setMap(map);
+            if (tap){
+                if (tapMarkers.length){
+                    for (let i = 0; i < tapMarkers.length ; i++){
+                        tapMarkers[i].setMap(map);
                     }
                 } else {
                     id = $(this).val();
-                    tabs = await get_devices_by_type(id);
-                    for (let i = 0; i < tabs.length ; i++){
+                    taps = await get_devices_by_type(id);
+                    for (let i = 0; i < taps.length ; i++){
                         position = {
-                            lat: parseFloat(tabs[i].lat),
-                            lng: parseFloat(tabs[i].lng)
+                            lat: parseFloat(taps[i].lat),
+                            lng: parseFloat(taps[i].lng)
                         };
-                        marker = addCustomMarker(position,map,'Tab',parseInt(tabs[i].connections),parseInt(tabs[i].busy));
-                        tabMarkers.push(marker);
+                        marker = addCustomMarker(position,map,'Tap',parseInt(taps[i].connections),parseInt(taps[i].busy));
+                        tapMarkers.push(marker);
                     }
                 }
             } else{
-                for (let i = 0; i < tabMarkers.length ; i++){
-                    tabMarkers[i].setMap(null);
+                for (let i = 0; i < tapMarkers.length ; i++){
+                    tapMarkers[i].setMap(null);
                 }
             }
         });
-
-        const get_devices = () => {
-            return new Promise((response, reject) => {
-                $.ajax({
-                    url: '{{route('devices')}}',
-                    type: 'GET',
-                    dataType: 'JSON',
-                })
-                .done((data) => {
-                    response(data);
-                })
-                .fail(() => {
-                    reject(0);
-                });
-            });
-        };
 
         const get_devices_by_type = (id) => {
             return new Promise((response, reject) => {
@@ -167,7 +151,7 @@
             let device_type = [];
 
             device_type['Terminal'] = '{{asset('img/tv.png')}}';
-            device_type['Tab'] = '{{asset('img/phone.png')}}';
+            device_type['Tap'] = '{{asset('img/phone.png')}}';
 
             let image = {
                 url: device_type[device],
@@ -188,7 +172,13 @@
                 map: map
             });
 
+            marker.addListener('dblclick', function() {
+                current_marker = marker;
+                open_panorama(marker);
+            });
+
             marker.addListener('click', () => {
+                current_marker = marker;
                 contentString =
                     `<div id="content">
                     <div id="siteNotice">
@@ -201,7 +191,12 @@
                     </div>
                     </div>`;
                 infowindow.setContent(contentString);
-                infowindow.open(map, marker);
+                current_marker = marker;
+                if (infowindow.getMap()){
+                    infowindow.close();
+                }else{
+                    infowindow.open(map, marker);
+                }
             });
 
             return marker;

@@ -52,6 +52,7 @@
                                                 <option value="100">100 mts.</option>
                                                 <option value="200">200 mts.</option>
                                                 <option value="500">500 mts.</option>
+                                                <option value="1000">1 Km.</option>
                                             </select>
                                         </div>
                                     </div>
@@ -62,8 +63,8 @@
                                         <label class="custom-control-label pl-4 pt-1" for="terminal">Terminales</label>
                                     </div>
                                     <div class="custom-control custom-checkbox mr-sm-2">
-                                        <input type="checkbox" class="custom-control-input" name="tab" value="1" id="tab">
-                                        <label class="custom-control-label pl-4 pt-1" for="tab">Tabs</label>
+                                        <input type="checkbox" class="custom-control-input" name="tap" value="1" id="tap">
+                                        <label class="custom-control-label pl-4 pt-1" for="tap">Taps</label>
                                     </div>
                                     <br>
                                     <br>
@@ -181,7 +182,7 @@
                     lng: selected_position.lng,
                     radio: $('select#radio').val(),
                     terminal: ($('input#terminal').is(':checked')?1:0),
-                    tab: ($('input#tab').is(':checked')?1:0)
+                    tap: ($('input#tap').is(':checked')?1:0)
                 };
                 $.ajax({
                     url: url,
@@ -200,8 +201,8 @@
 
         const set_places = () => {
             const defaultBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(-16.506336, -68.143524), //down
-                new google.maps.LatLng(-16.482357, -68.121815) //up
+                new google.maps.LatLng(-16.509262, -68.143087), //down-16.491157,-16.509262
+                new google.maps.LatLng(-16.491157, -68.123174) //up(-68.123174,-68.143087),
             );
 
             const options = {
@@ -232,7 +233,7 @@
 
             device_type['Here'] = '{{asset('img/here.png')}}';
             device_type['Terminal'] = '{{asset('img/tv.png')}}';
-            device_type['Tab'] = '{{asset('img/phone.png')}}';
+            device_type['Tap'] = '{{asset('img/phone.png')}}';
 
             let image = {
                 url: device_type[device],
@@ -256,9 +257,14 @@
             if (connections){
                 let infowindow = new google.maps.InfoWindow();
                 let streetViewInfoWindow = new google.maps.InfoWindow();
+
+                marker.addListener('dblclick', function() {
+                    current_marker = marker;
+                    open_panorama(marker);
+                });
+
                 marker.addListener('click', () => {
-                    let streetViewPanorama = map.getStreetView();
-                    console.log(streetViewPanorama.getVisible());
+                    current_marker = marker;
                     contentString =
                         `<div id="content">
                     <div id="siteNotice">
@@ -270,11 +276,11 @@
                         <b>Libres: </b>${connections-busy}</p>
                     </div>
                     </div>`;
-                    if(streetViewPanorama.getVisible() == true) {
-                        streetViewInfoWindow.setContent(contentString);
-                        streetViewInfoWindow.open(streetViewPanorama);
+                    infowindow.setContent(contentString);
+                    current_marker = marker;
+                    if (infowindow.getMap()){
+                        infowindow.close();
                     }else{
-                        infowindow.setContent(contentString);
                         infowindow.open(map, marker);
                     }
                 });

@@ -31,8 +31,8 @@ class devicesController extends Controller
                 $q->when($request->input('terminal') == 1, function ($q){
                     return $q->orWhere('device_type_id',DeviceType::TERMINAL);
                 });
-                $q->when($request->input('tab') == 1, function ($q){
-                    return $q->orWhere('device_type_id',DeviceType::TAB);
+                $q->when($request->input('tap') == 1, function ($q){
+                    return $q->orWhere('device_type_id',DeviceType::TAP);
                 });
             })
             ->get();

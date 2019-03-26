@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class DeviceType extends Model
 {
     CONST TERMINAL = 1;
-    CONST TAB = 2;
+    CONST TAP = 2;
 
     public function devices(){
         return $this->hasMany(Device::class);

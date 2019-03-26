@@ -19,7 +19,7 @@
 
 @section('content')
     <div class="page-wrapper">
-        <h1 class="text-center pt-3">DEMO</h1>
+        <h1 class="text-center pt-3">DEMO Cotel - Bayoex S.R.L.</h1>
         <div class="container-fluid pt-0">
             <div id="map"></div>
         </div>
@@ -35,7 +35,7 @@
             let height = ($( document ).height() - 50);
             $('#map').css('height',height);
 
-            enable_map(true);
+            enable_map(false);
             let position = {};
             let datos;
             datos = await get_devices();
@@ -69,7 +69,7 @@
 
             let device_type = [];
             device_type['Terminal'] = '{{asset('img/tv.png')}}';
-            device_type['Tab'] = '{{asset('img/phone.png')}}';
+            device_type['Tap'] = '{{asset('img/phone.png')}}';
 
             let image = {
                 url: device_type[device],
@@ -83,27 +83,38 @@
                 label: {
                     text: device,
                     color: '#141344',
+                    textShadow:'-10px 0 black, 0 10px black, 10px 0 black, 0 -10px black',
                     fontWeight: 'bold',
-                    fontSize: '13px'
+                    fontSize: '15px'
                 },
                 icon:image,
                 map: map
             });
 
-            marker.addListener('click', function() {
+            marker.addListener('dblclick', function() {
+                current_marker = marker;
+                open_panorama(marker);
+            });
+
+            marker.addListener('click', function () {
+                current_marker = marker;
                 contentString =
-                    '<div id="content">'+
-                    '<div id="siteNotice">'+
-                    '</div>'+
-                    '<h4 id="firstHeading" class="firstHeading">Disponibilidad</h4>'+
-                    '<div id="bodyContent">'+
-                    '<p<b>Conexiones: </b>'+connections+'</p>'+
-                    '<p<b>Ocupadas: </b>'+busy+'</p>'+
-                    '<p<b>Libres: </b>'+(connections-busy)+'</p>'+
-                    '</div>'+
-                    '</div>';
+                    `<div id="content">
+                    <div id="siteNotice">
+                    </div>
+                    <h4 id="firstHeading" class="firstHeading">Disponibilidad</h4>
+                    <div id="bodyContent">
+                    <p><b>Conexiones: </b>${connections}<br>
+                    <b>Ocupadas: </b>${busy}<br>
+                    <b>Libres: </b>${connections-busy}</p>
+                    </div>
+                    </div>`;
                 infowindow.setContent(contentString);
-                infowindow.open(map, marker);
+                if (infowindow.getMap()){
+                    infowindow.close();
+                }else{
+                    infowindow.open(map, marker);
+                }
             });
         }
     </script>
