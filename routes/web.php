@@ -28,3 +28,5 @@ Route::get('/search', function () {
 })->name('search');
 
 Route::post('/get_devices_near', 'devicesController@getDevicesNear')->name('get_devices_near');
+
+Route::get('/routes', function (){return view('admin');})->name('routes');

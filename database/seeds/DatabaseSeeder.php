@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder
             'id' => \App\DeviceType::TAP,
             'name' => 'Tap'
         ]);
-        factory(\App\Device::class,200)->create();
+        factory(\App\Device::class,10)->create();
     }
 }

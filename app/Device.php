@@ -29,4 +29,8 @@ class Device extends Model
     public function device_type(){
         return $this->belongsTo(DeviceType::class);
     }
+
+    public function devices(){
+        return $
+    }
 }
