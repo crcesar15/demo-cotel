@@ -59,16 +59,30 @@
                                     <br>
                                     <br>
                                     <div class="custom-control custom-checkbox mr-sm-2">
-                                        <input type="checkbox" class="custom-control-input" value="1" name="terminal" id="terminal">
-                                        <label class="custom-control-label pl-4 pt-1" for="terminal">Terminales</label>
+                                        <input type="checkbox" class="custom-control-input" value="0" id="armario">
+                                        <label class="custom-control-label pl-4 pt-1" for="armario">Armarios</label>
                                     </div>
                                     <div class="custom-control custom-checkbox mr-sm-2">
-                                        <input type="checkbox" class="custom-control-input" name="tap" value="1" id="tap">
+                                        <input type="checkbox" class="custom-control-input" value="1" id="terminal">
+                                        <label class="custom-control-label pl-4 pt-1" for="terminal">Cajas Terminales</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-sm-2">
+                                        <input type="checkbox" class="custom-control-input" value="2" id="camara">
+                                        <label class="custom-control-label pl-4 pt-1" for="camara">Camaras</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-sm-2">
+                                        <input type="checkbox" class="custom-control-input" value="3" id="poste">
+                                        <label class="custom-control-label pl-4 pt-1" for="poste">Postes</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-sm-2">
+                                        <input type="checkbox" class="custom-control-input" value="4" id="tap">
                                         <label class="custom-control-label pl-4 pt-1" for="tap">Taps</label>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <br>
                                     <br>
-                                    <div class="col-12 col-md-2">
+                                    <div class="col-12 offset-5 col-md-2">
                                         <button type="submit" class="btn btn-success btn-block">
                                             <i class="fa fa-search"> Buscar</i>
                                         </button>
@@ -111,7 +125,6 @@
         $('input#from_places').change(() => {
             if (searchMarkers.length){
                 for(let i = 0; i < searchMarkers.length; i++){
-                    console.log('entro');
                     searchMarkers[i].setMap(null);
                 }
                 searchMarkers = [];
@@ -120,7 +133,6 @@
 
         $('form#search').submit(async (event) => {
             event.preventDefault();
-
             let data;
             let marker;
             let line;
@@ -145,25 +157,23 @@
 
             if(selected_position && check_flag){
                 let data_to_markers = await get_devices_near();
-                if (data_to_markers.length){
+                if (data_to_markers[0].length || data_to_markers[1].length || data_to_markers[2].length || data_to_markers[3].length || data_to_markers[4].length ){
                     delete_search_lines();
                     delete_search_markers();
-                    for (let i = 0; i < data_to_markers.length; i++){
-                        marker = addCustomMarker(
-                            {
-                                lat:parseFloat(data_to_markers[i].lat),
-                                lng:parseFloat(data_to_markers[i].lng)
-                            },
-                            map,
-                            data_to_markers[i].device_type.name,
-                            data_to_markers[i].connections,
-                            data_to_markers[i].busy
-                        );
-                        points = [selected_position, {lat:parseFloat(data_to_markers[i].lat),lng:parseFloat(data_to_markers[i].lng)}];
-                        line = addLine(points, map,'#514d8e');
-                        get_data_two_points(points);
-                        searchLines.push(line);
-                        searchMarkers.push(marker);
+                    for (var i = 0; i < data_to_markers.length; i++){
+                        data = data_to_markers[i];
+                        for(var j = 0; j < data.length; j++){
+                            position = {
+                                lat: parseFloat(data[j].lat),
+                                lng: parseFloat(data[j].lng)
+                            };
+                            marker = addCustomMarker(position, data[j], i);
+                            points = [selected_position, {lat:parseFloat(data[j].lat),lng:parseFloat(data[j].lng)}];
+                            line = addLine(points, map,'#514d8e');
+                            get_data_two_points(points);
+                            searchLines.push(line);
+                            searchMarkers.push(marker);
+                        }
                     }
                 }else{
                     delete_search_lines();
@@ -181,7 +191,10 @@
                     lat: selected_position.lat,
                     lng: selected_position.lng,
                     radio: $('select#radio').val(),
+                    armario: ($('input#armario').is(':checked')?1:0),
                     terminal: ($('input#terminal').is(':checked')?1:0),
+                    camara: ($('input#camara').is(':checked')?1:0),
+                    poste: ($('input#poste').is(':checked')?1:0),
                     tap: ($('input#tap').is(':checked')?1:0)
                 };
                 $.ajax({
@@ -227,69 +240,72 @@
             });
         };
 
-        const addCustomMarker = (location, map, device, connections, busy) => {
+        function addCustomMarker(location, data, index) {
             let contentString = '';
             let device_type = [];
+            let device_text = [];
 
-            device_type['Here'] = '{{asset('img/here.png')}}';
-            device_type['Terminal'] = '{{asset('img/tv.png')}}';
-            device_type['Tap'] = '{{asset('img/phone.png')}}';
+            device_type[0] = '{{asset('img/armario.png')}}';
+            device_type[1] = '{{asset('img/tv.png')}}';
+            device_type[2] = '{{asset('img/camera.png')}}';
+            device_type[3] = '{{asset('img/poste.png')}}';
+            device_type[4] = '{{asset('img/phone.png')}}';
+
+            device_text[0] = 'Armario';
+            device_text[1] = 'Terminal';
+            device_text[2] = 'Camara';
+            device_text[3] = 'Poste';
+            device_text[4] = 'Tap';
 
             let image = {
-                url: device_type[device],
+                url: String(device_type[index]),
                 labelOrigin: new google.maps.Point(15,35)
             };
 
-            if (device === 'Here' ){ device = "Referencia"}
+            let infowindow = new google.maps.InfoWindow();
 
             let marker = new google.maps.Marker({
                 position: location,
                 label: {
-                    text: device,
+                    text: device_text[index],
                     color: '#141344',
+                    textShadow:'-10px 0 black, 0 10px black, 10px 0 black, 0 -10px black',
                     fontWeight: 'bold',
-                    fontSize: '13px'
+                    fontSize: '15px'
                 },
                 icon:image,
                 map: map
             });
 
-            if (connections){
-                let infowindow = new google.maps.InfoWindow();
-                let streetViewInfoWindow = new google.maps.InfoWindow();
+            marker.addListener('dblclick', function() {
+                current_marker = marker;
+                open_panorama(marker);
+            });
 
-                marker.addListener('dblclick', function() {
-                    current_marker = marker;
-                    open_panorama(marker);
-                });
+            marker.addListener('click', function () {
+                current_marker = marker;
+                contentString =
+                    `<div id="content">
+                        <div id="siteNotice">
+                        </div>
 
-                marker.addListener('click', () => {
-                    current_marker = marker;
-                    contentString =
-                        `<div id="content">
-                    <div id="siteNotice">
-                    </div>
-                    <h4 id="firstHeading" class="firstHeading">Disponibilidad</h4>
-                    <div id="bodyContent">
-                        <p><b>Conexiones: </b>${connections}<br>
-                        <b>Ocupadas: </b>${busy}<br>
-                        <b>Libres: </b>${connections-busy}</p>
-                    </div>
+                        <h4 id="firstHeading" class="firstHeading">Detalles</h4>
+
+                        <div id="bodyContent">
+                            <pre>
+                                 ${JSON.stringify(data, null, 2)}
+                            </pre>
+                        </div>
                     </div>`;
-                    infowindow.setContent(contentString);
-                    current_marker = marker;
-                    if (infowindow.getMap()){
-                        infowindow.close();
-                    }else{
-                        infowindow.open(map, marker);
-                    }
-                });
-            }else{
-                if (ant_marker != null) {
-                    ant_marker.setMap(null);
+                infowindow.setContent(contentString);
+                if (infowindow.getMap()){
+                    infowindow.close();
+                }else{
+                    infowindow.open(map, marker);
                 }
-            }
+            });
+
             return marker;
-        };
+        }
     </script>
 @endpush

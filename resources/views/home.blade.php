@@ -41,7 +41,7 @@
             datos = await get_devices();
             for (var i = 0; i < datos.length; i++){
                 data = datos[i];
-                for(var j = 150; j < data.length; j++){
+                for(var j = 0; j < data.length; j++){
                     position = {
                         lat: parseFloat(data[j].lat),
                         lng: parseFloat(data[j].lng)
@@ -74,14 +74,14 @@
 
             device_type[0] = '{{asset('img/armario.png')}}';
             device_type[1] = '{{asset('img/tv.png')}}';
-            device_type[3] = '{{asset('img/camera.png')}}';
-            device_type[2] = '{{asset('img/poste.png')}}';
+            device_type[2] = '{{asset('img/camera.png')}}';
+            device_type[3] = '{{asset('img/poste.png')}}';
             device_type[4] = '{{asset('img/phone.png')}}';
 
             device_text[0] = 'Armario';
             device_text[1] = 'Terminal';
-            device_text[3] = 'Camara';
-            device_text[2] = 'Poste';
+            device_text[2] = 'Camara';
+            device_text[3] = 'Poste';
             device_text[4] = 'Tap';
 
             let image = {
