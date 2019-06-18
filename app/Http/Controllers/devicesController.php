@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 class devicesController extends Controller
 {
     public function getDevices(){
-        $data = Device::with('device_type')->get();
+        $data = [];
+        $data[0] = \DB::table('ea_armarios')->get();
+        $data[1] = \DB::table('ea_cajas_terminal')->get();
+        $data[2] = \DB::table('ea_camaras')->get();
+        $data[3] = \DB::table('ea_postes_secundario')->get();
+        $data[4] = \DB::table('ea_catv_tap')->get();
         return response()->json($data);
     }
 

@@ -28,7 +28,7 @@
 @stop
 
 @push('scripts')
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYfXp15LPz_VuK75gqcgNicuwK1H-1BOw"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.35&key=AIzaSyDYfXp15LPz_VuK75gqcgNicuwK1H-1BOw"></script>
     <script src="{{asset('js/maps.js')}}"></script>
     <script>
         $(document).ready(async function () {
@@ -39,12 +39,15 @@
             let position = {};
             let datos;
             datos = await get_devices();
-            for (var i = 0; i < datos.length ; i++){
-                position = {
-                    lat: parseFloat(datos[i].lat),
-                    lng: parseFloat(datos[i].lng)
-                };
-                addCustomMarker(position,map,datos[i].device_type.name,parseInt(datos[i].connections),parseInt(datos[i].busy));
+            for (var i = 0; i < datos.length; i++){
+                data = datos[i];
+                for(var j = 150; j < data.length; j++){
+                    position = {
+                        lat: parseFloat(data[j].lat),
+                        lng: parseFloat(data[j].lng)
+                    };
+                    addCustomMarker(position, data[j], i);
+                }
             }
         });
 
@@ -64,15 +67,25 @@
             });
         };
 
-        function addCustomMarker(location, map, device, connections, busy) {
+        function addCustomMarker(location, data, index) {
             let contentString = '';
-
             let device_type = [];
-            device_type['Terminal'] = '{{asset('img/tv.png')}}';
-            device_type['Tap'] = '{{asset('img/phone.png')}}';
+            let device_text = [];
+
+            device_type[0] = '{{asset('img/armario.png')}}';
+            device_type[1] = '{{asset('img/tv.png')}}';
+            device_type[3] = '{{asset('img/camera.png')}}';
+            device_type[2] = '{{asset('img/poste.png')}}';
+            device_type[4] = '{{asset('img/phone.png')}}';
+
+            device_text[0] = 'Armario';
+            device_text[1] = 'Terminal';
+            device_text[3] = 'Camara';
+            device_text[2] = 'Poste';
+            device_text[4] = 'Tap';
 
             let image = {
-                url: device_type[device],
+                url: String(device_type[index]),
                 labelOrigin: new google.maps.Point(15,35)
             };
 
@@ -81,7 +94,7 @@
             let marker = new google.maps.Marker({
                 position: location,
                 label: {
-                    text: device,
+                    text: device_text[index],
                     color: '#141344',
                     textShadow:'-10px 0 black, 0 10px black, 10px 0 black, 0 -10px black',
                     fontWeight: 'bold',
@@ -100,14 +113,16 @@
                 current_marker = marker;
                 contentString =
                     `<div id="content">
-                    <div id="siteNotice">
-                    </div>
-                    <h4 id="firstHeading" class="firstHeading">Disponibilidad</h4>
-                    <div id="bodyContent">
-                    <p><b>Conexiones: </b>${connections}<br>
-                    <b>Ocupadas: </b>${busy}<br>
-                    <b>Libres: </b>${connections-busy}</p>
-                    </div>
+                        <div id="siteNotice">
+                        </div>
+
+                        <h4 id="firstHeading" class="firstHeading">Detalles</h4>
+
+                        <div id="bodyContent">
+                            <pre>
+                                 ${JSON.stringify(data, null, 2)}
+                            </pre>
+                        </div>
                     </div>`;
                 infowindow.setContent(contentString);
                 if (infowindow.getMap()){

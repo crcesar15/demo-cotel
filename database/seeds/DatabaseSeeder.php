@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\DeviceType::class)->create([
+        /*factory(\App\DeviceType::class)->create([
             'id' => \App\DeviceType::TERMINAL,
             'name' => 'Terminal'
         ]);
@@ -19,6 +19,16 @@ class DatabaseSeeder extends Seeder
             'id' => \App\DeviceType::TAP,
             'name' => 'Tap'
         ]);
-        factory(\App\Device::class,200)->create();
+        factory(\App\Device::class,200)->create();*/
+        $faker = Faker\Factory::create();
+        for ($i = 1; $i <= 206; $i++){
+            $id = DB::table('ea_catv_tap')->select('nrocompred')->limit($i)->get()->last();
+            DB::table('ea_catv_tap')
+                ->where('nrocompred',$id->nrocompred)
+                ->update([
+                'lat' => $faker->latitude(-16.462043,-16.525331),
+                'lng' => $faker->longitude(-68.100625,-68.167401)
+            ]);
+        }
     }
 }
